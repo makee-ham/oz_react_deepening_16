@@ -1,4 +1,7 @@
-const TodoFilter = ({ filter, onFilterChange }) => {
+import { memo } from 'react';
+
+// onFilterChange는 Todo.jsx에서 이미 useCallback으로 되어 있음!
+const TodoFilter = memo(({ filter, onFilterChange }) => {
     return (
         <div className="my-5 p-2.5 bg-gray-100 rounded">
             <span className="mr-2">필터: </span>
@@ -28,6 +31,6 @@ const TodoFilter = ({ filter, onFilterChange }) => {
             </button>
         </div>
     );
-};
+});
 
 export default TodoFilter;
