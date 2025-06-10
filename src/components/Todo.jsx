@@ -8,11 +8,9 @@ const Todo = () => {
     const [todos, setTodos] = useState([]);
     const [filter, setFilter] = useState('all');
 
-    const generateId = () => Math.floor(Math.random() * 10000);
-
     const handleAdd = useCallback((text) => {
         const newTodo = {
-            id: generateId(),
+            id: Math.floor(Math.random() * 10000),
             text,
             completed: false,
             createdAt: new Date(),
