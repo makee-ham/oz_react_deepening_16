@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 import TodoFilter from './TodoFilter';
@@ -10,7 +10,7 @@ const Todo = () => {
 
     const generateId = () => Math.floor(Math.random() * 10000);
 
-    const handleAdd = (text) => {
+    const handleAdd = useCallback((text) => {
         const newTodo = {
             id: generateId(),
             text,
@@ -18,26 +18,28 @@ const Todo = () => {
             createdAt: new Date(),
         };
 
-        setTodos([...todos, newTodo]);
-    };
+        setTodos((prevTodos) => [...prevTodos, newTodo]);
+    }, []);
 
-    const handleToggle = (id) => {
-        setTodos(todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)));
-    };
+    const handleToggle = useCallback((id) => {
+        setTodos((prevTodos) =>
+            prevTodos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)),
+        );
+    }, []);
 
-    const handleDelete = (id) => {
-        setTodos(todos.filter((todo) => todo.id !== id));
-    };
+    const handleDelete = useCallback((id) => {
+        setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+    }, []);
 
-    const handleEdit = (id, newText) => {
-        setTodos(todos.map((todo) => (todo.id === id ? { ...todo, text: newText } : todo)));
-    };
+    const handleEdit = useCallback((id, newText) => {
+        setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === id ? { ...todo, text: newText } : todo)));
+    }, []);
 
-    const handleFilterChange = (newFilter) => {
+    const handleFilterChange = useCallback((newFilter) => {
         setFilter(newFilter);
-    };
+    }, []);
 
-    const getFilteredTodos = () => {
+    const filteredTodos = useMemo(() => {
         switch (filter) {
             case 'active':
                 return todos.filter((todo) => !todo.completed);
@@ -46,9 +48,7 @@ const Todo = () => {
             default:
                 return todos;
         }
-    };
-
-    const filteredTodos = getFilteredTodos();
+    }, [todos, filter]);
 
     return (
         <div className="max-w-xl mx-auto p-5">
